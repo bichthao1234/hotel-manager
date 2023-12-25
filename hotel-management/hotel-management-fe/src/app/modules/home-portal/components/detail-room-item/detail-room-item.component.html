@@ -1,0 +1,36 @@
+<div class="d-flex flex-column my-2 detail-room-item p-2 rounded">
+  <div>{{detailRoomClass.roomClassificationId.roomKind.name}}
+    - {{detailRoomClass.roomClassificationId.roomType.name}}</div>
+  <div class="d-flex flex-row">
+    <div class="d-flex flex-row align-items-center">
+      <div class="m-price-promotion mr-2" style="font-weight: bold">
+        <span>{{getShowPrice(price?.roomClassPrice)}}đ</span>
+        <label class="fs-10px">/đêm</label>
+      </div>
+<!--      <div class="d-flex flex-row">-->
+<!--        <span class="m-price-promotion">{{getShowPrice(price?.priceAfterPromotion)}}đ</span>-->
+<!--        <label class="fs-10px">/đêm</label>-->
+<!--      </div>-->
+    </div>
+  </div>
+  <div *ngIf="price?.hasPromotion" class="d-flex flex-row justify-content-between">
+    <div>
+      <span class="m-price-discout">Khuyến mãi: {{getShowPrice(price?.promotionAmount * detailRoomClass.numOfRoom * price.appliedDays)}}đ</span>
+      <div class="ml-2 pointer-cursor">
+            <span class="material-symbols-outlined fs-13px"
+                  [matTooltip]="price?.hasPromotion ? price?.promotionDescription + getDisplayTextPromotionRange(): ''">help</span>
+      </div>
+    </div>
+    <div>
+      <span>{{getShowPrice(getTotal())}}đ</span>
+      <span class="material-symbols-outlined fs-13px"
+            [matTooltip]="getDisplayTextTotal()">info</span>
+    </div>
+  </div>
+  <div *ngIf="!price?.hasPromotion" class="d-flex flex-row justify-content-end">
+    <div>
+      <span>{{getShowPrice(getTotal())}}đ</span>
+    </div>
+  </div>
+  <div>{{showNumOfRoom()}}</div>
+</div>

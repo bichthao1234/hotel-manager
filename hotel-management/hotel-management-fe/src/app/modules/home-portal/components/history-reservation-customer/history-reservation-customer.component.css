@@ -1,0 +1,14 @@
+.wrap-history {
+  padding: 25px 50px !important;
+}
+
+.detail-reservation-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+}
+
+.wrap-item-history-reservation {
+  height: 35vh !important;
+  overflow: scroll;
+}

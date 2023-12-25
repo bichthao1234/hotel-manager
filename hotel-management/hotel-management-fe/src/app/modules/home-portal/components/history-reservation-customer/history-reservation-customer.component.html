@@ -1,0 +1,120 @@
+<div class="wrap-history">
+  <div class="px-5 py-3 rounded bg-white min-vh-100">
+    <div class="mb-3 d-flex flex-row justify-content-center">
+      <div class="w-fit">
+        <h3>Tra cứu lịch sử đặt phòng của người dùng</h3>
+        <mat-divider></mat-divider>
+      </div>
+    </div>
+    <div [formGroup]="customerId" class="form-group w-50">
+      <label><b>CCCD/CMND</b></label>
+      <div class="d-flex flex-row align-items-start justify-content-start mb-3">
+        <input type="text" class="form-control" formControlName="id"
+               [ngClass]="{'is-invalid': customerId.controls['id'].invalid && isSubmit}">
+        <div class="ml-2">
+          <button mat-button class="h-100 btn btn-primary border" (click)="searchHistoryReservation()">
+            <span class="material-symbols-outlined">search</span>
+          </button>
+        </div>
+      </div>
+      <div *ngIf="customerId.controls['id'].hasError('required') && isSubmit"
+           class="fs-13px text-danger">
+        Vui lòng nhập thông tin người dùng (CCCD/CMND)!
+      </div>
+    </div>
+    <mat-divider *ngIf="historyReservationList && historyReservationList?.historyReservations"></mat-divider>
+    <div class="mt-5" *ngIf="historyReservationList && historyReservationList?.historyReservations">
+      <div *ngIf="historyReservationList?.customer">
+        <div class="mt-3 w-fit">
+          <h5>Thông tin khách hàng</h5>
+          <mat-divider></mat-divider>
+        </div>
+        <div class="p-3 border rounded">
+          <div class="h-fit w-fit d-flex flex-column justify-content-center">
+            <div>
+              <label><b>CCCD/CMND:</b> {{historyReservationList?.customer.id}}</label>
+            </div>
+            <div>
+              <label><b>Họ
+                tên:</b> {{historyReservationList?.customer.firstName + ' ' + historyReservationList?.customer.lastName}}
+              </label>
+            </div>
+            <div>
+              <label><b>Email:</b> {{historyReservationList?.customer.email ?? null | nullHyphens}}</label>
+            </div>
+            <div>
+              <label><b>Số điện thoại:</b> {{historyReservationList?.customer.phoneNumber ?? null | nullHyphens}}
+              </label>
+            </div>
+            <div>
+              <label><b>Mã số thuế:</b> {{historyReservationList?.customer.taxNumber ?? null | nullHyphens}}</label>
+            </div>
+            <div>
+              <label><b>Địa chỉ:</b> {{historyReservationList?.customer.address ?? null | nullHyphens}}</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-5 p-3 rounded border" *ngIf="historyReservationList?.historyReservations">
+        <div class="row">
+          <div class="col-8 d-flex flex-row align-items-end">
+            <div class="mr-2 m-date-item">
+              <label><b>Ngày đặt phòng</b></label>
+              <app-range-date-picker [isRequire]="true"
+                                     (respDateSelected)="getCreatedDate($event)"></app-range-date-picker>
+            </div>
+            <div class="mr-2 m-date-item">
+              <label><b>Ngày nhận phòng</b></label>
+              <app-range-date-picker [isRequire]="true"
+                                     (respDateSelected)="getStartDate($event)"></app-range-date-picker>
+            </div>
+          </div>
+          <div></div>
+        </div>
+        <div class="pb-2">
+          <div class="mt-3 mb-3 w-100">
+            <h5>Lịch sử đặt phòng</h5>
+            <mat-divider></mat-divider>
+          </div>
+          <div *ngIf="!historyReservationListShow || historyReservationListShow?.length <= 0" class="mt-2 mb-3 d-flex flex-row justify-content-center">
+            <div class="w-fit">
+              <span>Không có dữ liệu</span>
+            </div>
+          </div>
+          <div *ngIf="historyReservationListShow">
+            <p-timeline [value]="historyReservationListShow" align="alternate">
+              <ng-template pTemplate="content" let-historyReservation>
+                <p-card [header]="getFormatDate(historyReservation?.createdDate)">
+                  <div>
+                    <b>Ngày nhận - trả phòng: </b> {{getCheckInOutDate(historyReservation)}}
+                  </div>
+                  <div>
+                    <b>Tiền cọc: </b> {{getFormatPrice(historyReservation.deposit)}}vnđ
+                  </div>
+                  <div class="wrap-item-history-reservation">
+                    <div *ngFor="let item of historyReservation?.reservationDetails">
+                      <div class="detail-reservation-grid rounded border px-2 py-3 mt-3">
+                        <span class="mr-2">Hạng phòng:</span>
+                        <div>
+                          {{item.roomClassName}}
+                        </div>
+                        <span class="mr-2">Số phòng:</span>
+                        <div>
+                          {{item.numberOfRooms}}
+                        </div>
+                        <span class="mr-2">Giá:</span>
+                        <div>
+                          {{getFormatPrice(getPriceAmountRoomCls(item))}}vnđ
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </p-card>
+              </ng-template>
+            </p-timeline>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
